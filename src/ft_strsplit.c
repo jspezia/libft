@@ -5,82 +5,67 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jspezia <jspezia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/21 19:04:48 by erobert           #+#    #+#             */
-/*   Updated: 2014/04/15 16:33:09 by jspezia          ###   ########.fr       */
+/*   Created: 2013/11/27 18:53:26 by jspezia           #+#    #+#             */
+/*   Updated: 2013/12/29 20:31:53 by jspezia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <string.h>
+#include <stdlib.h>
 #include "libft.h"
 
-static char	*ft_take_word(size_t start, char *str, char c)
+size_t	ft_wordsize(char const *s, char c)
 {
-	char	*word;
-	size_t	i;
-	size_t	k;
+	size_t	size;
 
-	k = start;
-	while (str[k] && str[k] != c)
-		k++;
-	word = (char *)malloc(sizeof(*word) * (k - start + 1));
-	if (!word)
+	size = 0;
+	while (*s != '\0' && *s != c)
+	{
+		s++;
+		size++;
+	}
+	return (size);
+}
+
+size_t	ft_countwords(char const *s, char c)
+{
+	size_t	count;
+
+	count = 0;
+	while (*s != '\0')
+	{
+		if (*s != c && (*(s + 1) == c || *(s + 1) == '\0'))
+			count++;
+		s++;
+	}
+	return (count);
+}
+
+char	**ft_strsplit(char const *s, char c)
+{
+	char	**ptr;
+	size_t	nb_words;
+	size_t	i;
+	size_t	word_size;
+
+	nb_words = ft_countwords(s, c);
+	ptr = malloc((nb_words + 1) * sizeof(*ptr));
+	if (ptr == NULL)
 		return (NULL);
 	i = 0;
-	while (i + start < k)
+	while (i < nb_words && *s != '\0')
 	{
-		word[i] = str[i + start];
+		while (*s == c)
+			s++;
+		word_size = ft_wordsize(s, c);
+		ptr[i] = malloc((word_size + 1) * sizeof(**ptr));
+		if (ptr[i] == NULL)
+			return (NULL);
+		ft_strncpy(ptr[i], s, word_size);
+		ptr[i][word_size] = '\0';
+		s += word_size;
 		i++;
 	}
-	word[i] = '\0';
-	return (word);
-}
-
-static int	ft_nbwords(char *str, char c)
-{
-	char	*word;
-	int		i;
-	int		k;
-
-	k = 0;
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == c)
-			i++;
-		else
-		{
-			word = ft_take_word(i, str, c);
-			k++;
-			i = i + ft_strlen(word);
-			free(word);
-		}
-	}
-	return (k);
-}
-
-char		**ft_strsplit(char const *s, char c)
-{
-	char	**tab;
-	size_t	i;
-	size_t	k;
-
-	i = 0;
-	k = 0;
-	if (!s)
-		return (NULL);
-	tab = (char**)malloc(sizeof(*tab) * (ft_nbwords((char *)s, c) + 1));
-	if (!tab)
-		return (NULL);
-	while (s[i])
-	{
-		if (s[i] == c)
-			i++;
-		else
-		{
-			tab[k] = ft_take_word(i, (char *)s, c);
-			i += ft_strlen(tab[k]);
-			k++;
-		}
-	}
-	tab[k] = NULL;
-	return (tab);
+	ptr[i] = NULL;
+	return (ptr);
 }

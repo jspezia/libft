@@ -5,33 +5,32 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jspezia <jspezia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/23 23:45:52 by jspezia           #+#    #+#             */
-/*   Updated: 2014/04/15 16:05:37 by jspezia          ###   ########.fr       */
+/*   Created: 2013/11/22 11:07:37 by jspezia           #+#    #+#             */
+/*   Updated: 2013/11/22 11:07:56 by jspezia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int		ft_atoi(const char *str)
+int		ft_atoi(char const *str)
 {
 	int	i;
-	int	k;
+	int	j;
 	int	num;
 
-	k = 1;
 	i = 0;
 	num = 0;
-	while (str[i] == ' ')
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n'
+			|| str[i] == '\v' || str[i] == '\f' || str[i] == '\r')
 		i++;
-	if (str[i] == '+' && str[i + 1] != '-')
-		i++;
-	if (str[i] == '-')
+	j = i;
+	while (str[i] != '\0')
 	{
-		k = -1;
+		if (str[i] >= '0' && str[i] <= '9')
+			num = (num * 10) + str[i] - '0';
+		else if (!((str[i] == '+' || str[i] == '-') && i == j))
+			break ;
 		i++;
 	}
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		num = num * 10 + str[i] - 48;
-		i++;
-	}
-	return (num * k);
+	if (str[j] == '-')
+		num *= -1;
+	return (num);
 }

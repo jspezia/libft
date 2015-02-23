@@ -5,114 +5,71 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jspezia <jspezia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/01/05 09:34:28 by jspezia           #+#    #+#             */
-/*   Updated: 2014/04/15 16:33:35 by jspezia          ###   ########.fr       */
+/*   Created: 2013/12/03 12:45:25 by jspezia           #+#    #+#             */
+/*   Updated: 2014/03/13 13:56:54 by jspezia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include <unistd.h>
 #include "libft.h"
 
-static int				ft_read(char **fbuf, char **line, int const fd);
-
-int						get_next_line(int const fd, char **line)
+static char	*proper_join(char *s1, char *s2)
 {
-	int					ret;
-	char				*tmp;
-	char				*fbuf;
-	t_buffer			*ptr;
-	static t_buffer		*list = NULL;
+	size_t	s1_len;
+	size_t	s2_len;
+	char	*result;
 
-	ptr = lstinit(&list, fd);
-	fbuf = ptr->fbuf;
-	if ((ret = ft_read(&fbuf, line, fd)) <= 0)
-		return (ret);
-	if (ft_strchr(fbuf, '\n'))
+	s1_len = (s1) ? ft_strlen(s1) : 0;
+	s2_len = ft_strlen(s2);
+	result = ft_strnew(s1_len + s2_len);
+	if (result)
 	{
-		ret = ft_strchr(fbuf, '\n') - fbuf;
-		if (!(*line = ft_strnew(ret)))
-			return (-1);
-		ft_strncpy(*line, fbuf, ret);
-		if (!(tmp = ft_strsub(fbuf, ret + 1, ft_strlen(fbuf) - ret)))
-			return (-1);
-		free(fbuf);
-		ptr->fbuf = tmp;
+		if (s1)
+			ft_memcpy(result, s1, s1_len);
+		ft_memcpy(result + s1_len, s2, s2_len);
 	}
-	return (1);
+	if (s1)
+		ft_strdel(&s1);
+	return (result);
 }
 
-static int				ft_read(char **fbuf, char **line, int const fd)
+static int	cut_at_newline(char **save_buff, char **line)
 {
-	char				*buf;
-	char				*tmp;
-	int					ret;
+	char	*delimiter;
 
-	if (!(buf = (char *) malloc(BUFF_SIZE + 1)))
+	if ((delimiter = ft_strchr(*save_buff, '\n')))
+	{
+		*line = ft_strsub(*save_buff, 0, delimiter - *save_buff);
+		ft_strcpy(*save_buff, delimiter + 1);
+		return (1);
+	}
+	return (0);
+}
+
+int			get_next_line(int const fd, char **line)
+{
+	int			bytes_read;
+	char		buff[BUFF_SIZE + 1];
+	static char	*save_buff = NULL;
+
+	if (save_buff && cut_at_newline(&save_buff, line))
+		return (1);
+	while ((bytes_read = read(fd, buff, BUFF_SIZE)) > 0)
+	{
+		buff[bytes_read] = '\0';
+		save_buff = proper_join(save_buff, buff);
+		if (cut_at_newline(&save_buff, line))
+			return (1);
+	}
+	if (bytes_read < 0)
 		return (-1);
-	while (!(ft_strchr(*fbuf, '\n')))
+	if (save_buff && *save_buff)
 	{
-		if (((ret = read(fd, buf, BUFF_SIZE)) == -1) || (!ret))
-		{
-			if (ret == -1)
-				return (-1);
-			*line = (**fbuf == '\0') ? NULL : ft_strdup(*fbuf);
-			ret = (**fbuf == '\0') ? 0 : 1;
-			ft_bzero(*fbuf, 1);
-			return (ret);
-		}
-		buf[ret] = '\0';
-		if (!(tmp = ft_strjoin(*fbuf, buf)))
-			return (-1);
-		free(*fbuf);
-		*fbuf = tmp;
+		*line = ft_strdup(save_buff);
+		ft_strdel(&save_buff);
+		return (1);
 	}
-	free(buf);
-	return (1);
-}
-
-t_buffer				*lstinit(t_buffer **list, int const fd)
-{
-	t_buffer			*ptr;
-
-	if (!(*list))
-	{
-		*list = lstadd(list, fd);
-		ptr = *list;
-	}
-	else
-	{
-		ptr = *list;
-		while (ptr != NULL)
-		{
-			if (ptr->fd == fd)
-				return (ptr);
-			ptr = ptr->next;
-		}
-	}
-	ptr = lstadd(list, fd);
-	return (ptr);
-}
-
-t_buffer				*lstadd(t_buffer **list, int const fd)
-{
-	t_buffer			*entry;
-
-	if (!(*list))
-	{
-		if (!(entry = (t_buffer *) malloc(sizeof(t_buffer))))
-			return (NULL);
-		if (!(entry->fbuf = ft_memalloc(1)))
-			return (NULL);
-		entry->next = NULL;
-		entry->fd = fd;
-		return (*list = entry);
-	}
-	if (!(entry = (t_buffer *) malloc(sizeof(t_buffer))))
-		return (NULL);
-	if (!(entry->fbuf = ft_memalloc(1)))
-		return (NULL);
-	entry->next = *list;
-	entry->fd = fd;
-	*list = entry;
-	return (*list);
+	if (save_buff)
+		ft_strdel(&save_buff);
+	return (0);
 }

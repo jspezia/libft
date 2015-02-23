@@ -5,27 +5,25 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jspezia <jspezia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/19 15:19:47 by jspezia           #+#    #+#             */
-/*   Updated: 2014/04/15 16:41:01 by jspezia          ###   ########.fr       */
+/*   Created: 2013/11/22 10:56:52 by jspezia           #+#    #+#             */
+/*   Updated: 2015/01/24 19:03:47 by jspezia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <string.h>
 #include "libft.h"
 
-char		*ft_strdup(const char *s1)
+char	*ft_strdup(char const *s1)
 {
-	int		len;
-	int		i;
-	char	*str2;
+	size_t	len;
+	char	*s2;
 
-	i = 0;
-	len = ft_strlen(s1);
-	str2 = malloc(sizeof(*s1) * (len + 1));
-	while (i <= len)
-	{
-		str2[i] = s1[i];
-		i++;
-	}
-	return (str2);
+	len = 0;
+	while (s1[len] != '\0')
+		len++;
+	s2 = (char *)malloc((len + 1) * sizeof(*s2));
+	if (s2)
+		s2 = ft_strcpy(s2, s1);
+	return (s2);
 }

@@ -5,33 +5,28 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jspezia <jspezia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/21 18:17:29 by jspezia           #+#    #+#             */
-/*   Updated: 2014/04/15 16:19:39 by jspezia          ###   ########.fr       */
+/*   Created: 2013/11/22 10:54:37 by jspezia           #+#    #+#             */
+/*   Updated: 2013/11/25 16:10:38 by jspezia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include <string.h>
 
-int			ft_memcmp(const void *s1, const void *s2, size_t n)
+int		ft_memcmp(void const *s1, void const *s2, size_t n)
 {
-	char		*sr1;
-	char		*sr2;
-	size_t		i;
+	size_t				i;
+	const unsigned char	*str1;
+	const unsigned char	*str2;
 
 	i = 0;
-	sr1 = (char*) s1;
-	sr2 = (char*) s2;
-	if (sr1[i] == '\0' && sr2[i] == '\0')
-		return (sr1[i] - sr2[i]);
-	while (n != 0)
+	str1 = s1;
+	str2 = s2;
+	while (i < n)
 	{
-		if (sr1[i] == '\0' || sr2[i] == '\0')
-			return (sr1[i] - sr2[i]);
-		if (sr1[i] != sr2[i])
-			return (sr1[i] - sr2[i]);
-		i++;
-		n--;
+		if (str1[i] != str2[i])
+			return (str1[i] - str2[i]);
+		else
+			i++;
 	}
-	i--;
-	return (sr1[i] - sr2[i]);
+	return (0);
 }

@@ -5,52 +5,36 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jspezia <jspezia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/23 23:45:52 by jspezia           #+#    #+#             */
-/*   Updated: 2014/04/15 17:23:10 by jspezia          ###   ########.fr       */
+/*   Created: 2013/11/27 20:21:03 by jspezia           #+#    #+#             */
+/*   Updated: 2015/01/24 18:57:30 by jspezia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "libft.h"
 
-static char	*ft_stockint(int n, char *nb, int i, int k)
+char	*ft_itoa(int n)
 {
-	int		j;
+	char	*s;
+	size_t	len;
 
-	j = 0;
+	if (n == -2147483648)
+		return (ft_strdup("-2147483648"));
+	len = ft_nbrlen(n);
+	if (!(s = (char *)malloc((len + 1) * sizeof(*s))))
+		return (NULL);
 	if (n < 0)
 	{
-		nb[j++] = '-';
-		n = -n;
+		s[0] = '-';
+		n *= -1;
 	}
-	k -= j;
-	while (k-- > 0)
+	s[len] = '\0';
+	while (n >= 10)
 	{
-		nb[j++] = n / i + '0';
-		n = n % i;
-		i = i / 10;
+		s[len - 1] = n % 10 + '0';
+		n = n / 10;
+		len--;
 	}
-	return (nb);
-}
-
-char		*ft_itoa(int n)
-{
-	char	*nb;
-	int		i;
-	int		k;
-
-	i = 1;
-	k = 1;
-	if (n < -2147483647)
-		return ("-2147483648");
-	if (n < 0)
-		k++;
-	while ((n / i) > 9 || (n / i) < -9)
-	{
-		i *= 10;
-		k++;
-	}
-	nb = ft_strnew(k + 1);
-	if (n == 0)
-		nb[0] = '0';
-	return (ft_stockint(n, nb, i, k));
+	s[len - 1] = n + '0';
+	return (s);
 }

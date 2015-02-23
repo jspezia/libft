@@ -5,19 +5,21 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jspezia <jspezia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/12/01 13:57:38 by jspezia           #+#    #+#             */
-/*   Updated: 2014/04/15 16:55:47 by jspezia          ###   ########.fr       */
+/*   Created: 2013/11/22 11:11:24 by jspezia           #+#    #+#             */
+/*   Updated: 2015/01/24 19:04:12 by jspezia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include <stdlib.h>
+#include <string.h>
+#include "libft.h"
 
 char	*ft_strnew(size_t size)
 {
-	char	*str;
+	char	*s;
 
-	str = (char *)malloc((size + 1) * sizeof(char));
-	ft_bzero(str, (size + 1));
-	return (str);
+	s = (char *)malloc((size + 1) * sizeof(char));
+	if (s)
+		ft_memset(s, '\0', size + 1);
+	return (s);
 }

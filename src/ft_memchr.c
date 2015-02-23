@@ -5,27 +5,25 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jspezia <jspezia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/21 16:48:03 by jspezia           #+#    #+#             */
-/*   Updated: 2014/04/15 16:31:08 by jspezia          ###   ########.fr       */
+/*   Created: 2013/11/22 10:54:21 by jspezia           #+#    #+#             */
+/*   Updated: 2015/01/24 19:06:11 by jspezia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include <string.h>
 
-void		*ft_memchr(const void *s, int c, size_t n)
+void	*ft_memchr(void const *s, int c, size_t n)
 {
-	char	*src;
-	size_t	i;
-	char	test;
+	size_t				i;
+	const unsigned char	*str;
 
-	src = (char*) s;
 	i = 0;
-	test = (char) c;
-	while (src[i] != test)
+	str = s;
+	while (i < n)
 	{
-		if (src[i] == '\0' || i == n)
-			return (NULL);
+		if (str[i] == (unsigned char)c)
+			return ((void *)&str[i]);
 		i++;
 	}
-	return (src + i);
+	return (NULL);
 }
