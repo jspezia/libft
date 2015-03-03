@@ -6,7 +6,7 @@
 #    By: jspezia <jspezia@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/11/26 16:39:11 by jspezia           #+#    #+#              #
-#    Updated: 2015/02/23 13:25:45 by jspezia          ###   ########.fr        #
+#    Updated: 2015/03/03 15:46:52 by jspezia          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -98,7 +98,8 @@ SRC	=	ft_memset.c \
 			dlist.c \
 			dlist_node.c \
 			dlist_node_rm.c \
-			ft_str_isint.c
+			ft_str_isint.c \
+			ft_tabcpy.c
 
 CFILE	= $(patsubst %,$(CPATH)/%, $(SRC))
 OFILE	= $(patsubst %.c,$(OPATH)/%.o, $(SRC))

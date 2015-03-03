@@ -6,7 +6,7 @@
 /*   By: jspezia <jspezia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/20 20:09:01 by jspezia           #+#    #+#             */
-/*   Updated: 2015/02/23 13:47:56 by jspezia          ###   ########.fr       */
+/*   Updated: 2015/03/03 15:49:56 by jspezia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,8 @@ double				frad(double value);
 double				fdeg(double value);
 int					decimal_to_octal(int n);
 int					octal_to_decimal(int n);
+
+char				**ft_tabcpy(char **tab);
 
 /*
 **				Free
